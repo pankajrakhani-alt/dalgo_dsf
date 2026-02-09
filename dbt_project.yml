@@ -35,15 +35,15 @@ flags:
 # directory as views. These settings can be overridden in the individual model
 # files using the `{{ config(...) }}` macro.
 models:
-  dalgo_dsf: #put the same name here as in as in .dbt-ci.yml and profiles.yml
-    # Config indicated by + and applies to all files under models/example/
+  dalgo_dsf:
+    +materialized: view
+
     staging:
       +schema: staging
-      +materialized: view
-      
+
     prod:
       +schema: prod
       +materialized: table
-  
+
   elementary:
     +schema: "elementary"
