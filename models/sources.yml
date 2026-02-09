@@ -1,1 +1,9 @@
+version: 2
 
+sources:
+  - name: staging
+    database: postgres
+    schema: staging
+    tables:
+      - name: surveycto_visit_raw
+        description: "Raw SurveyCTO visit data ingested via Dalgo from Google Sheets"
