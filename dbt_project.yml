@@ -1,8 +1,8 @@
-name: 'dbtrepo'
+name: dbtrepo
 version: '1.0.0'
 config-version: 2
 
-profile: 'dalgo_dsf'
+profile: dalgo_dsf
 
 model-paths: ["models"]
 
