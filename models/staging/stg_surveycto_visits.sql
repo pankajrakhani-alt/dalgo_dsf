@@ -28,13 +28,16 @@ with source as (
 deduplicated as (
 
     select *
-    from source
-    qualify row_number() over (
-        partition by submission_key
-        order by visit_date desc
-    ) = 1
+    from (
+        select *,
+                row_number() over (
+                    partition by submission_key
+                    order by visit_date desc
+                ) as rn
+        from source
+    ) t
+    where rn = 1
 
 )
 
 select * from deduplicated
-
