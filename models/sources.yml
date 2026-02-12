@@ -6,4 +6,4 @@ sources:
     schema: staging
     tables:
       - name: pp_raw_data
-        description: "Raw SurveyCTO visit data ingested via Dalgo from Google Sheets"
+        description: "Raw SurveyCTO visit data"
