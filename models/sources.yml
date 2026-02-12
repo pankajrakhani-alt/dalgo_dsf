@@ -5,5 +5,5 @@ sources:
     database: postgres
     schema: staging
     tables:
-      - name: surveycto_visit_raw
+      - name: pp_raw_data
         description: "Raw SurveyCTO visit data ingested via Dalgo from Google Sheets"
