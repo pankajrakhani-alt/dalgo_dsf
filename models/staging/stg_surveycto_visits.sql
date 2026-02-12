@@ -19,7 +19,7 @@ with source as (
         teacher_present_session1,
         interact_with_teacher
 
-    from {{ source('staging', 'surveycto_visit_raw') }}
+    from {{ source('staging', 'pp_raw_data') }}
 
 ),
 
