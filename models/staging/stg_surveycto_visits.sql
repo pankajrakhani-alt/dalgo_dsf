@@ -28,10 +28,10 @@ deduplicated as (
     select *
     from (
         select *,
-            row_number() over (
-                partition by submission_key
-                order by visit_date desc
-            ) as rn
+               row_number() over (
+                   partition by submission_key
+                   order by visit_date desc
+               ) as rn
         from source
     ) t
     where rn = 1
