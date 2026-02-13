@@ -14,7 +14,7 @@ select
 
     sum(
         case
-            when teacher_present_session1 = 'Yes' then 1
+            when teacher_present_session_1 = 'Yes' then 1
             else 0
         end
     ) as teacher_present_visits
