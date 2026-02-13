@@ -13,8 +13,8 @@ with source as (
         ) as school_name,
 
         cast(sessions_taken_today as integer) as sessions_taken_today,
-        cast(boys_session1 as integer) as boys_session1,
-        cast(girls_session1 as integer) as girls_session1,
+        cast(boys_session_1 as integer) as boys_session1,
+        cast(girls_session_1 as integer) as girls_session1,
         cast(interaction_rating as integer) as interaction_rating,
         teacher_present_session1,
         interact_with_teacher
