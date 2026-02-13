@@ -1,7 +1,7 @@
 with source as (
 
     select
-        "KEY" as submission_key,
+        key as submission_key,
         cast(visit_date as date) as visit_date,
         educator_name,
         cohort,
