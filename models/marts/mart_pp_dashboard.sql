@@ -9,7 +9,6 @@ select
 
     visit_date,
     cohort,
-    educator_name,
     school_name,
 
     count(*) as total_visits,
@@ -29,5 +28,4 @@ from base
 group by
     visit_date,
     cohort,
-    educator_name,
     school_name
