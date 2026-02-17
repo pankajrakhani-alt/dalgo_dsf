@@ -25,7 +25,7 @@ select
         2
     ) as teacher_present_percent,
 
-    sum(total_sessions_taken) as total_sessions_taken,
+    sum(total_sessions_taken_today) as total_sessions_taken_today,
 
     avg(avg_interaction_rating) as avg_interaction_rating
 
