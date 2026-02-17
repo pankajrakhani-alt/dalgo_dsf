@@ -35,7 +35,6 @@ deduplicated as (
         from source
     ) t
     where rn = 1
-
 )
-
+    
 select * from deduplicated
