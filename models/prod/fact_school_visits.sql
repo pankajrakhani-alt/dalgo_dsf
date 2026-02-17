@@ -1,13 +1,16 @@
-select
+select 
     visit_date,
     cohort,
     school_name,
 
     count(*) as total_visits,
 
+    sum(coalesce(boys_session1,0)) as total_boys,
+    sum(coalesce(girls_session1,0)) as total_girls,
+
     sum(
-        coalesce(boys_session1, 0)
-        + coalesce(girls_session1, 0)
+        coalesce(boys_session1,0) +
+        coalesce(girls_session1,0)
     ) as total_students,
 
     avg(interaction_rating) as avg_interaction_rating,
@@ -25,4 +28,3 @@ group by
     visit_date,
     cohort,
     school_name
-
