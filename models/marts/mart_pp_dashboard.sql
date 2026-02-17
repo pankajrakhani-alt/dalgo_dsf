@@ -8,6 +8,7 @@ with base as (
 select
 
     visit_date,
+    educator_name,
     cohort,
     school_name,
 
@@ -22,11 +23,16 @@ select
         100.0 * sum(teacher_present_visits) 
         / nullif(sum(total_visits),0),
         2
-    ) as teacher_present_percent
+    ) as teacher_present_percent,
+
+    sum(total_sessions_taken) as total_sessions_taken,
+
+    avg(avg_interaction_rating) as avg_interaction_rating
 
 from base
 
 group by
     visit_date,
+    educator_name,
     cohort,
     school_name
