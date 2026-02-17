@@ -1,6 +1,6 @@
 with base as (
 
-    select * 
+    select *
     from {{ ref('fact_school_visits') }}
 
 )
@@ -11,17 +11,18 @@ select
     cohort,
     school_name,
 
-    count(*) as total_visits,
+    sum(total_visits) as total_visits,
+    sum(total_boys) as total_boys,
+    sum(total_girls) as total_girls,
+    sum(total_students) as total_students,
 
-    sum(boys_session_1) as total_boys,
-    sum(girls_session_1) as total_girls,
+    sum(teacher_present_visits) as teacher_present_visits,
 
-    sum(case 
-        when teacher_present_session_1 = 'Yes' then 1 
-        else 0 
-    end) as teacher_present_count,
-
-    count(activities_session1) as activity_count
+    round(
+        100.0 * sum(teacher_present_visits) 
+        / nullif(sum(total_visits),0),
+        2
+    ) as teacher_present_percent
 
 from base
 
