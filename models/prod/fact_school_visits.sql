@@ -1,5 +1,6 @@
 select 
     visit_date,
+    educator_name,
     cohort,
     school_name,
 
@@ -23,5 +24,6 @@ from {{ ref('stg_surveycto_visits') }}
 
 group by
     visit_date,
+    educator_name,
     cohort,
     school_name
