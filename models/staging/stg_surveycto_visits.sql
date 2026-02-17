@@ -16,8 +16,17 @@ with source as (
         cast(boys_session_1 as integer) as boys_session1,
         cast(girls_session_1 as integer) as girls_session1,
         cast(interaction_rating as integer) as interaction_rating,
-        teacher_present_session_1,
-        interact_with_teacher
+        case 
+            when teacher_present_session_1 = 'Yes' then 1
+            else 0
+        end as teacher_present_flag,
+
+        case
+            when interact_with_teacher = 'Yes' then 1
+            else 0
+        end as teacher_interaction_flag,
+
+        activities_session1
 
     from {{ source('staging', 'pp_raw_data') }}
 
