@@ -17,8 +17,8 @@ with source as (
         cast(girls_session_1 as integer) as girls_session1,
         cast(interaction_rating as integer) as interaction_rating,
         case 
-            when teacher_present_session_1 = 'Yes' then 1
-            else 0
+            when teacher_present_session_1 = 'Yes' then 'Yes'
+            else 'No'
         end as teacher_present_flag,
 
         case
