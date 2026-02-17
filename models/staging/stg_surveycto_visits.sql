@@ -18,7 +18,7 @@ with source as (
         cast(interaction_rating as integer) as interaction_rating,
         teacher_present_session_1,
         interact_with_teacher,
-        activities_session1
+        activities_session_1 as activities_session1
 
     from {{ source('staging', 'pp_raw_data') }}
 
