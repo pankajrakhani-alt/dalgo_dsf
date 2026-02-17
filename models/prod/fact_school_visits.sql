@@ -1,5 +1,6 @@
 select 
     visit_date,
+    educator_name,
     cohort,
     school_name,
 
@@ -15,16 +16,14 @@ select
 
     avg(interaction_rating) as avg_interaction_rating,
 
-    sum(
-        case
-            when teacher_present_session_1 = 'Yes' then 1
-            else 0
-        end
-    ) as teacher_present_visits
+    sum(teacher_present_flag) as teacher_present_visits,
+
+    sum(sessions_taken_today) as total_sessions_taken
 
 from {{ ref('stg_surveycto_visits') }}
 
 group by
     visit_date,
+    educator_name,
     cohort,
     school_name
