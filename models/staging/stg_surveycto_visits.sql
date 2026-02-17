@@ -26,7 +26,7 @@ with source as (
             else 0
         end as teacher_interaction_flag,
 
-        activities_session1
+        activities_session_1 as activities_session1
 
     from {{ source('staging', 'pp_raw_data') }}
 
