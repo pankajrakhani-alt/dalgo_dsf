@@ -6,4 +6,19 @@ sources:
     schema: staging
     tables:
       - name: pp_raw_data
-        description: "Raw SurveyCTO visit data"
+        loaded_at_field: submission_date
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+
+models:
+  - name: stg_surveycto_visits
+    columns:
+      - name: submission_key
+        tests:
+          - not_null
+          - unique
+
+      - name: visit_date
+        tests:
+          - not_null
