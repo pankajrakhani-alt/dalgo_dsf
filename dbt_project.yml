@@ -36,8 +36,11 @@ flags:
 models:
   dalgo_dsf: #put the same name here as in as in .dbt-ci.yml and profiles.yml
     # Config indicated by + and applies to all files under models/example/
-    example:
-      +materialized: view
-      
+    staging:
+      +materialized: table
+    prod:
+      +materialized: table
+    marts:
+      +materialized: table  
   elementary:
     +schema: "elementary"
