@@ -1,3 +1,4 @@
+{{ config(enabled=true) }}
 with source as (
 
     select

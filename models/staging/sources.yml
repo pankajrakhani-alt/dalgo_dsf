@@ -2,23 +2,88 @@ version: 2
 
 sources:
   - name: staging
-    database: postgres
     schema: staging
     tables:
+
+      # ─────────────────────────────────────
+      # Pune Project
+      # ─────────────────────────────────────
       - name: pp_raw_data
         loaded_at_field: submission_date
         freshness:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
 
+      # ─────────────────────────────────────
+      # Nadiad Project (hpn02)
+      # ─────────────────────────────────────
+
+      # Athlete Registration Form
+      - name: athlete_registration
+        loaded_at_field: submissiondate
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+
+      # Injury Report Form
+      - name: injury_report
+        loaded_at_field: submissiondate
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+
+      # Competition Report Form
+      - name: competition_report
+        loaded_at_field: submissiondate
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+
 models:
+  # Pune
   - name: stg_surveycto_visits
     columns:
       - name: submission_key
         tests:
           - not_null
           - unique
-
       - name: visit_date
+        tests:
+          - not_null
+
+  # Nadiad
+  - name: stg_nadiad_registration
+    description: "Athlete registration - DPDP compliant"
+    columns:
+      - name: submission_key
+        tests:
+          - not_null
+          - unique
+      - name: athlete_id
+        tests:
+          - not_null
+      - name: submission_date
+        tests:
+          - not_null
+
+  - name: stg_nadiad_injury
+    description: "Injury report - staging"
+    columns:
+      - name: submission_key
+        tests:
+          - not_null
+          - unique
+      - name: athlete_id
+        tests:
+          - not_null
+
+  - name: stg_nadiad_competition
+    description: "Competition report - staging"
+    columns:
+      - name: submission_key
+        tests:
+          - not_null
+          - unique
+      - name: athlete_id
         tests:
           - not_null
