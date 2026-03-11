@@ -5,7 +5,7 @@ with source as (
 renamed as (
     select
         trim(fellow_name)                    as fellow_name,
-        cast(date_of_visit as date)          as planned_date,
+        to_date(date_of_visit, 'DD/MM/YYYY') as planned_date,
         trim(school_name)                    as school_name,
         trim(class_section)                  as class_section,
         trim(monthly_objective)              as monthly_objective,

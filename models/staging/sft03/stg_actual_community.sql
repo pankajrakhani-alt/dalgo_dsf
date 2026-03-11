@@ -5,14 +5,31 @@ with source as (
 renamed as (
     select
         trim(fellow_name)                        as fellow_name,
-        cast(date_of_visit as date)              as actual_date,
+        to_date(
+    case 
+        when date_of_visit ~ '^\d{1,2}/\d{1,2}/\d{4}$' 
+             and split_part(date_of_visit,'/',2)::int > 12
+        then split_part(date_of_visit,'/',2) || '/' || 
+             split_part(date_of_visit,'/',1) || '/' || 
+             split_part(date_of_visit,'/',3)
+        else date_of_visit
+    end, 'DD/MM/YYYY'
+)                                        as actual_date,    
         trim(engagement_nature)                  as engagement_nature,
         trim(session_objective)                  as session_objective,
         trim(engagement_details)                 as engagement_details,
-        cast(total_children as integer)          as total_children,
-        cast(boys_count as integer)              as boys_count,
-        cast(girls_count as integer)             as girls_count,
-        cast(students_went_to_tt as integer)     as students_went_to_tt,
+        case when trim(total_children) ~ '^[0-9]+$' 
+     then trim(total_children)::integer 
+     else null end                              as total_children,
+case when trim(boys_count) ~ '^[0-9]+$' 
+     then trim(boys_count)::integer 
+     else null end                              as boys_count,
+case when trim(girls_count) ~ '^[0-9]+$' 
+     then trim(girls_count)::integer 
+     else null end                              as girls_count,
+case when trim(students_went_to_tt) ~ '^[0-9]+$' 
+     then trim(students_went_to_tt)::integer 
+     else null end                              as students_went_to_tt,
         trim(outcome)                            as outcome,
         trim(comments)                           as comments,
         'community'                              as session_type
