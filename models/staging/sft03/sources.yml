@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: staging
+    database: ngo-dalgo-db
+    schema: staging
+    tables:
+      - name: Merged_P_S
+      - name: Merged_A_S
+      - name: Merged_P_C
+      - name: Merged_A_C
