@@ -5,20 +5,118 @@ sources:
     database: postgres
     schema: staging
     tables:
+
+      # ─────────────────────────────────────
+      # Pune Project (pup01)
+      # ─────────────────────────────────────
       - name: pp_raw_data
         loaded_at_field: submission_date
         freshness:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
 
+      # ─────────────────────────────────────
+      # Nadiad Project (hpn02)
+      # ─────────────────────────────────────
+      - name: athlete_registration
+        loaded_at_field: submissiondate
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+
+      - name: injury_report
+        loaded_at_field: submissiondate
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+
+      - name: competition_report
+        loaded_at_field: submissiondate
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+
+      # ─────────────────────────────────────
+      # SFT Project (sft03)
+      # ─────────────────────────────────────
+      - name: Merged_P_S
+      - name: Merged_A_S
+      - name: Merged_P_C
+      - name: Merged_A_C
+
 models:
+  # ─────────────────────────────────────
+  # Pune (pup01)
+  # ─────────────────────────────────────
   - name: stg_surveycto_visits
     columns:
       - name: submission_key
         tests:
           - not_null
           - unique
-
       - name: visit_date
+        tests:
+          - not_null
+
+  # ─────────────────────────────────────
+  # Nadiad (hpn02)
+  # ─────────────────────────────────────
+  - name: stg_nadiad_registration
+    columns:
+      - name: submission_key
+        tests:
+          - not_null
+          - unique
+      - name: athlete_id
+        tests:
+          - not_null
+
+  - name: stg_nadiad_injury
+    columns:
+      - name: submission_key
+        tests:
+          - not_null
+          - unique
+      - name: athlete_id
+        tests:
+          - not_null
+
+  - name: stg_nadiad_competition
+    columns:
+      - name: submission_key
+        tests:
+          - not_null
+          - unique
+      - name: athlete_id
+        tests:
+          - not_null
+
+  # ─────────────────────────────────────
+  # SFT (sft03)
+  # ─────────────────────────────────────
+  - name: stg_planned_school
+    columns:
+      - name: fellow_name
+        tests:
+          - not_null
+      - name: planned_date
+        tests:
+          - not_null
+
+  - name: stg_actual_school
+    columns:
+      - name: fellow_name
+        tests:
+          - not_null
+
+  - name: stg_planned_community
+    columns:
+      - name: fellow_name
+        tests:
+          - not_null
+
+  - name: stg_actual_community
+    columns:
+      - name: fellow_name
         tests:
           - not_null
