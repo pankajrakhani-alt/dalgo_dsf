@@ -9,7 +9,7 @@ renamed as (
     select
         -- 🔧 SYSTEM
         key                                         as submission_key,
-        cast(submission_date as timestamp)          as submission_date,
+        cast(to_date(submission_date::text, 'DD/MM/YYYY') as timestamp)          as submission_date,
         cast(starttime as timestamp)                as start_time,
         cast(endtime as timestamp)                  as end_time,
         -- cast(submission_time as timestamp)          as submission_time,
@@ -38,7 +38,7 @@ renamed as (
 
         -- 🔴 PII RAW (restricted)
         athlete_name                                as athlete_name_raw,
-        cast(dob as date)                           as dob_raw,
+        cast(to_date(dob::text, 'DD/MM/YYYY') as date)  as dob_raw,
         parent_full_name                            as parent_name_raw,
         parent_mobile                               as parent_mobile_raw,
         address                                     as address_raw,
@@ -53,7 +53,7 @@ renamed as (
         age,
         age_group,
         district_1                                   as district,
-        cast(joining_date as date)                  as joining_date,
+        cast(to_date(joining_date::text, 'DD/MM/YYYY') as date)  as joining_date,
 
         -- 🏫 EDUCATION
         school_college_name,
