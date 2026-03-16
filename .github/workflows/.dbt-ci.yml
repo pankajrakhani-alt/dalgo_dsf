@@ -46,8 +46,9 @@ jobs:
       - name: Establish SSH tunnel
         run: |
           ssh -fN \
-            -L 5432:${{ secrets.POSTGRES_HOST }}:5432 \
+            -L 5432:ngo-dalgo-db.cpesu4w8kzyz.ap-south-1.rds.amazonaws.com:5432 \
             -i ~/.ssh/production_ddp \
+            -o StrictHostKeyChecking=no \
             ${{ secrets.DB_USER }}@${{ secrets.SSH_HOST }} &
           sleep 5
 
