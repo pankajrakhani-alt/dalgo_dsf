@@ -9,7 +9,11 @@ renamed as (
     select
         -- 🔧 SYSTEM
         key                                         as submission_key,
-        cast(to_date(submission_date::text, 'DD/MM/YYYY') as timestamp)          as submission_date,
+        case 
+    when submission_date ~ '^\d{2}/\d{2}/\d{4}$'
+        then to_timestamp(submission_date::text, 'DD/MM/YYYY')
+    else cast(submission_date::text as timestamp)
+end                                                             as submission_date,
         cast(starttime as timestamp)                as start_time,
         cast(endtime as timestamp)                  as end_time,
         -- cast(submission_time as timestamp)          as submission_time,
@@ -26,7 +30,11 @@ renamed as (
         record_status,
         caseid                                      as case_id,
         unique_id,
-        cast(registration_time as timestamp)        as registration_time,
+        case
+    when registration_time is not null
+        then cast(registration_time::text as timestamp)
+    else null
+end                                                             as registration_time,
 
         -- 🏫 ACADEMY
         academy_name,
