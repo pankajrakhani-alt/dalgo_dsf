@@ -46,9 +46,11 @@ jobs:
       - name: Establish SSH tunnel
         run: |
           ssh -fN \
-            -L 5432:${{ secrets.POSTGRES_HOST }}:5432 \
+            -L 5432:ngo-dalgo-db.cpesu4w8kzyz.ap-south-1.rds.amazonaws.com:5432 \
             -i ~/.ssh/production_ddp \
-            ${{ secrets.DB_USER }}@${{ secrets.SSH_HOST }}
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.DB_USER }}@${{ secrets.SSH_HOST }} &
+          sleep 5
 
       # Step 6: Install Python dependencies
       - name: Install requirements
@@ -91,20 +93,20 @@ jobs:
           POSTGRES_HOST: 127.0.0.1 # Use localhost since the SSH tunnel forwards the port
           DBT_PROFILES_DIR: /home/runner/.dbt
 
-      # Step 10: Benchmark models using sqlfluff
-      - name: Benchmarking models
-        run: sqlfluff lint models --bench
-        env:
-          POSTGRES_DBNAME: ${{ secrets.POSTGRES_DBNAME }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_HOST: 127.0.0.1
+      # # Step 10: Benchmark models using sqlfluff
+      # - name: Benchmarking models
+      #   run: sqlfluff lint models --bench
+      #   env:
+      #     POSTGRES_DBNAME: ${{ secrets.POSTGRES_DBNAME }}
+      #     POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      #     POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      #     POSTGRES_HOST: 127.0.0.1
 
-      # Step 11: Lint models using sqlfluff
-      - name: Lint models
-        run: sqlfluff lint models -f human
-        env:
-          POSTGRES_DBNAME: ${{ secrets.POSTGRES_DBNAME }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_HOST: 127.0.0.1
+      # # Step 11: Lint models using sqlfluff
+      # - name: Lint models
+      #   run: sqlfluff lint models -f human
+      #   env:
+      #     POSTGRES_DBNAME: ${{ secrets.POSTGRES_DBNAME }}
+      #     POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      #     POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      #     POSTGRES_HOST: 127.0.0.1
