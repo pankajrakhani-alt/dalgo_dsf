@@ -9,13 +9,7 @@ renamed as (
     select
         -- 🔧 SYSTEM
         key                                         as submission_key,
-        case
-            when submission_date ~ '^\d+$'
-                then to_timestamp(submission_date::bigint * 86400 - 2209161600)
-            when submission_date ~ '^\d{2}/\d{2}/\d{4}$'
-                then to_timestamp(submission_date::text, 'DD/MM/YYYY')
-            else cast(submission_date::text as timestamp)
-        end                                         as submission_date,
+        nullif(submission_date, '')::timestamp      as submission_date,
         cast(starttime as timestamp)                as start_time,
         cast(endtime as timestamp)                  as end_time,
         cast(submission_time as timestamp)          as submission_time,
