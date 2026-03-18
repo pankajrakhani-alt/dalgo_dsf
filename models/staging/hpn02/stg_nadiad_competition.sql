@@ -9,7 +9,11 @@ renamed as (
     select
         -- 🔧 SYSTEM
         key                                         as submission_key,
-        cast(submission_date as timestamp)          as submission_date,
+        case
+            when submission_date ~ '^\d+$'
+            then to_timestamp((submission_date::bigint - 25569) * 86400)
+            else cast(submission_date as timestamp)
+        end 
         cast(starttime as timestamp)                as start_time,
         cast(endtime as timestamp)                  as end_time,
         cast(submission_time as timestamp)          as submission_time,
