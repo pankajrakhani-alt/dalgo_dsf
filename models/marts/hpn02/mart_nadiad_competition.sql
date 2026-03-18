@@ -27,7 +27,7 @@ final as (
         -- 👤 Athlete Context
         a.gender,
         a.age_group,
-        a.sport_discipline,
+        coalesce(a.sport_discipline, c.sport_discipline)    as sport_discipline,
         a.academy_name,
         a.current_level,
         a.training_years,
