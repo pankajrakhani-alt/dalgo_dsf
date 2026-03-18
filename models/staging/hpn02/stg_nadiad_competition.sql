@@ -9,7 +9,7 @@ renamed as (
     select
         -- 🔧 SYSTEM
         key                                         as submission_key,
-        nullif(submission_date, '')::timestamp      as submission_date,
+        cast(submissiondate as timestamp)           as submission_date,
         cast(starttime as timestamp)                as start_time,
         cast(endtime as timestamp)                  as end_time,
         cast(submission_time as timestamp)          as submission_time,
@@ -17,7 +17,7 @@ renamed as (
         device_info,
         formdef_version,
         formdef_id,
-        instance_id                                  as instance_id,
+        instanceid                                  as instance_id,
 
         -- 📋 AUDIT
         review_quality,

@@ -9,7 +9,7 @@ renamed as (
     select
         -- 🔧 SYSTEM
         key                                         as submission_key,
-        nullif(submission_date, '')::timestamp      as submission_date,
+        cast(submissiondate as timestamp)           as submission_date,
         cast(starttime as timestamp)                as start_time,
         cast(endtime as timestamp)                  as end_time,
         cast(submission_time as timestamp)          as submission_time,
@@ -17,7 +17,7 @@ renamed as (
         device_info,
         formdef_version,
         formdef_id,
-        instance_id                                  as instance_id,
+        instanceid                                  as instance_id,
 
         -- 📋 AUDIT
         review_quality,
@@ -38,7 +38,11 @@ renamed as (
 
         -- 🩹 INJURY
         injury_id,
-        cast(injury_date as date)                   as injury_date,
+        case
+            when injury_date ~ '^\d+$'
+            then (date '1899-12-30' + injury_date::integer)
+            else cast(injury_date as date)
+        end                                         as injury_date,
         injury_type,
         body_part,
         injury_occurrence,
@@ -48,17 +52,17 @@ renamed as (
         treatment_required,
         treatment_type,
         recovery_status,
-        cast(expected_recovery_date as date)        as expected_recovery_date,
-        cast(actual_recovery_date as date)          as actual_recovery_date,
-
-        -- ⏱️ RECOVERY DAYS
         case
-            when actual_recovery_date is not null
-             and injury_date is not null
-            then cast(actual_recovery_date as date)
-                 - cast(injury_date as date)
-            else cast(recovery_days as integer)
-        end                                         as recovery_days_calc,
+            when expected_recovery_date ~ '^\d+$'
+            then (date '1899-12-30' + expected_recovery_date::integer)
+            else cast(expected_recovery_date as date)
+        end                                         as expected_recovery_date,
+        case
+            when actual_recovery_date ~ '^\d+$'
+            then (date '1899-12-30' + actual_recovery_date::integer)
+            else cast(actual_recovery_date as date)
+        end                                         as actual_recovery_date,
+        cast(recovery_days as integer)              as recovery_days_calc,
 
         -- 🔧 DEVICE (restricted)
         deviceid                                    as device_id_raw,
