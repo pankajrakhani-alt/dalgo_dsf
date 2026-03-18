@@ -17,7 +17,7 @@ renamed as (
         device_info,
         formdef_version,
         formdef_id,
-        instanceid                                  as instance_id,
+        instance_id                                  as instance_id,
 
         -- 📋 AUDIT
         review_quality,
