@@ -28,6 +28,8 @@ models:
         +schema: staging
       sft03:
         +schema: staging
+      hpa04:
+        +schema: staging
     marts:
       +materialized: table
       pup01:
@@ -35,6 +37,8 @@ models:
       hpn02:
         +schema: prod
       sft03:
+        +schema: prod
+      hpa04:
         +schema: prod
     prod:
       +materialized: table

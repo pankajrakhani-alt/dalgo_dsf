@@ -43,7 +43,14 @@ sources:
       - name: Merged_A_S
       - name: Merged_P_C
       - name: Merged_A_C
-
+      # ─────────────────────────────────────
+      # Athlete Support Project (hpa04)
+      # ─────────────────────────────────────
+      - name: athlete_profile
+        loaded_at_field: last_updated
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 14, period: day}
 models:
   # ─────────────────────────────────────
   # Pune (pup01)
@@ -120,3 +127,13 @@ models:
       - name: fellow_name
         tests:
           - not_null
+
+  # ─────────────────────────────────────
+  # Athlete Support (hpa04)
+  # ─────────────────────────────────────
+  - name: stg_hpa04_athlete_profile
+    columns:
+      - name: athlete_id
+        tests:
+          - not_null
+          - unique
