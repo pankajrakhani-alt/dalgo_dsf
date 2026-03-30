@@ -7,7 +7,7 @@ with source as (
 
 renamed as (
     select
-        h_2_h_id,
+        h_2_h_id                                        as h2h_id, 
         athlete_id,
         opponent_name,
         opponent_country,
