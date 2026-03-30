@@ -43,6 +43,7 @@ sources:
       - name: Merged_A_S
       - name: Merged_P_C
       - name: Merged_A_C
+
       # ─────────────────────────────────────
       # Athlete Support Project (hpa04)
       # ─────────────────────────────────────
@@ -51,6 +52,25 @@ sources:
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 14, period: day}
+
+      - name: match_results
+        loaded_at_field: last_updated
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 14, period: day}
+
+      - name: rankings
+        loaded_at_field: last_updated
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 14, period: day}
+
+      - name: head_to_head
+        loaded_at_field: last_updated
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 14, period: day}
+
 models:
   # ─────────────────────────────────────
   # Pune (pup01)
@@ -137,3 +157,26 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: stg_hpa04_match_results
+    columns:
+      - name: match_id
+        tests:
+          - not_null
+          - unique
+      - name: athlete_id
+        tests:
+          - not_null
+
+  - name: stg_hpa04_rankings
+    columns:
+      - name: ranking_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_hpa04_head_to_head
+    columns:
+      - name: h2h_id
+        tests:
+          - not_null  
