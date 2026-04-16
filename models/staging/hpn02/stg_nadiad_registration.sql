@@ -37,7 +37,13 @@ renamed as (
 
         -- PII RAW
         athlete_name                                    as athlete_name_raw,
-        cast(dob as date)                               as dob_raw,
+        case
+            when dob ~ '^\d{2}-\d{2}-\d{4}$'
+            then to_date(dob, 'DD-MM-YYYY')
+            when dob ~ '^\d{4}-\d{2}-\d{2}$'
+            then cast(dob as date)
+            else null
+        end                                             as dob_raw,
         parent_full_name                                as parent_name_raw,
         parent_mobile                                   as parent_mobile_raw,
         address                                         as address_raw,
@@ -53,7 +59,13 @@ renamed as (
         gender,
         age_group,
         district                                        as district,
-        cast(joining_date as date)                      as joining_date,
+        case
+            when joining_date ~ '^\d{2}-\d{2}-\d{4}$'
+            then to_date(joining_date, 'DD-MM-YYYY')
+            when joining_date ~ '^\d{4}-\d{2}-\d{2}$'
+            then cast(joining_date as date)
+            else null
+        end                                             as joining_date,
 
         -- TRAINING YEARS
         training_years,

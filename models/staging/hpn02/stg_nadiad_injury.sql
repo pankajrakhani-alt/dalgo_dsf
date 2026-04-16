@@ -30,9 +30,13 @@ renamed as (
         sport_discipline_auto                           as sport_discipline,
 
         -- INJURY
-        cast(injury_date as date)                       as injury_date,
-        injury_type,
-
+        case
+            when injury_date ~ '^\d{2}-\d{2}-\d{4}$'
+            then to_date(injury_date, 'DD-MM-YYYY')
+            when injury_date ~ '^\d{4}-\d{2}-\d{2}$'
+            then cast(injury_date as date)
+            else null
+        end                                             as injury_date,
         -- body_part + side
         body_part,
         nullif(trim(body_side), '')                     as body_side,
@@ -50,8 +54,20 @@ renamed as (
         treatment_required,
         treatment_type,
         recovery_status,
-        cast(expected_recovery_date as date)            as expected_recovery_date,
-        cast(actual_recovery_date as date)              as actual_recovery_date,
+        case
+            when expected_recovery_date ~ '^\d{2}-\d{2}-\d{4}$'
+            then to_date(expected_recovery_date, 'DD-MM-YYYY')
+            when expected_recovery_date ~ '^\d{4}-\d{2}-\d{2}$'
+            then cast(expected_recovery_date as date)
+            else null
+        end                                             as expected_recovery_date,
+        case
+            when actual_recovery_date ~ '^\d{2}-\d{2}-\d{4}$'
+            then to_date(actual_recovery_date, 'DD-MM-YYYY')
+            when actual_recovery_date ~ '^\d{4}-\d{2}-\d{2}$'
+            then cast(actual_recovery_date as date)
+            else null
+        end                                             as actual_recovery_date,
 
         -- RECOVERY DAYS
         case

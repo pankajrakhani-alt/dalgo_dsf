@@ -31,7 +31,6 @@ final as (
 
         -- 🩹 Injury Details
         i.injury_date,
-        i.injury_type,
         i.body_part,
         i.injury_occurrence,
         i.injury_severity,

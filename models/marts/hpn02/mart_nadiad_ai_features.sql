@@ -12,11 +12,7 @@ injury_history as (
         athlete_id,
         count(*)                                    as injury_count,
         avg(recovery_days_calc)                     as avg_recovery_days,
-        max(severity_score)                         as max_severity,
-        sum(case when injury_type = 'Muscle'
-            then 1 else 0 end)                      as muscle_injuries,
-        sum(case when injury_type = 'Bone'
-            then 1 else 0 end)                      as bone_injuries
+        max(severity_score)                         as max_severity
     from {{ ref('mart_nadiad_injury_analysis') }}
     group by athlete_id
 ),
@@ -59,8 +55,6 @@ final as (
         coalesce(i.injury_count, 0)                 as injury_count,
         coalesce(i.avg_recovery_days, 0)            as avg_recovery_days,
         coalesce(i.max_severity, 0)                 as max_injury_severity,
-        coalesce(i.muscle_injuries, 0)              as muscle_injuries,
-        coalesce(i.bone_injuries, 0)                as bone_injuries,
 
         -- 🏆 Competition Features
         coalesce(c.comp_count, 0)                   as competition_count,
