@@ -1,64 +1,66 @@
 {{ config(materialized='table', schema='staging') }}
 
 with source as (
-    select *
-    from {{ source('staging', 'injury_report') }}
+    select * from {{ source('staging', 'injury_report') }}
 ),
 
 renamed as (
     select
+        -- SYSTEM
         key                                             as submission_key,
-        case
-            when submission_date ~ '^\d+$'
-            then to_timestamp((submission_date::bigint - 25569) * 86400)
-            else cast(submission_date as timestamp)
-        end                                             as submission_date,
-        starttime                                       as start_time,
-        endtime                                         as end_time,
-        submission_time,
+        cast(submission_date as timestamp)              as submission_date,
+        cast(starttime as timestamp)                    as start_time,
+        cast(endtime as timestamp)                      as end_time,
         duration,
         device_info,
         formdef_version,
         formdef_id,
         instance_id,
+
+        -- AUDIT
         review_quality,
         data_source,
         record_status,
         caseid                                          as case_id,
-        enumerator,
-        enumerator_id,
-        enumerator_name,
-        athlete_id,
-        athlete_name_confirm                            as athlete_name_raw,
-        md5(lower(trim(athlete_name_confirm)))          as athlete_name_hash,
-        sport_discipline,
-        injury_id,
-        case
-            when injury_date ~ '^\d+$'
-            then (date '1899-12-30' + injury_date::integer)
-            else cast(injury_date as date)
-        end                                             as injury_date,
+
+        -- ATHLETE LINK
+        kiuid                                           as athlete_id,
+        athlete_name_auto                               as athlete_name_raw,
+        md5(lower(trim(athlete_name_auto)))             as athlete_name_hash,
+        sport_discipline_auto                           as sport_discipline,
+
+        -- INJURY
+        cast(injury_date as date)                       as injury_date,
         injury_type,
+
+        -- body_part + side
         body_part,
-        injury_occurrence,
+        nullif(trim(body_side), '')                     as body_side,
+
+        -- Practice Match remapped
+        case
+            when lower(trim(injury_occurrence)) = 'practice match'
+                then 'Training'
+            else injury_occurrence
+        end                                             as injury_occurrence,
+
         injury_severity,
+
+        -- TREATMENT
         treatment_required,
         treatment_type,
         recovery_status,
+        cast(expected_recovery_date as date)            as expected_recovery_date,
+        cast(actual_recovery_date as date)              as actual_recovery_date,
+
+        -- RECOVERY DAYS
         case
-            when expected_recovery_date ~ '^\d+$'
-            then (date '1899-12-30' + expected_recovery_date::integer)
-            else cast(expected_recovery_date as date)
-        end                                             as expected_recovery_date,
-        case
-            when actual_recovery_date ~ '^\d+$'
-            then (date '1899-12-30' + actual_recovery_date::integer)
-            else cast(actual_recovery_date as date)
-        end                                             as actual_recovery_date,
-        cast(recovery_days as integer)                  as recovery_days_calc,
-        deviceid                                        as device_id_raw,
-        devicephonenum                                  as device_phone_raw,
-        username                                        as enumerator_username
+            when actual_recovery_date is not null
+             and injury_date is not null
+            then cast(actual_recovery_date as date)
+                 - cast(injury_date as date)
+            else cast(recovery_days as integer)
+        end                                             as recovery_days_calc
 
     from source
 ),

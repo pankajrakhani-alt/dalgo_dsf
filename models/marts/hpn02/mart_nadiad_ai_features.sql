@@ -41,7 +41,6 @@ final as (
         a.athlete_name_hash,
 
         -- 📊 Demographics Features
-        a.age,
         a.gender,
         a.training_years,
         a.current_level,
@@ -87,7 +86,7 @@ final as (
         -- 🔮 Potential Score (for talent identification)
         round(
             coalesce(c.avg_medal_score, 0) * 20 +
-            coalesce(a.training_years, 0) * 5 +
+            coalesce(cast(a.training_years as integer), 0) * 5 +
             case a.current_level
                 when 'National' then 30
                 when 'State'    then 20

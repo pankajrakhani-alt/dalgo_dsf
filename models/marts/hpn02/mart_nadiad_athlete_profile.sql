@@ -37,13 +37,12 @@ final as (
         a.athlete_id,
         a.athlete_name_hash,
         a.gender,
-        a.age,
         a.age_group,
         a.district,
         a.joining_date,
 
         -- 🏫 Academy
-        a.academy_name,
+        a.scheme_name,
         a.sport_discipline,
         a.event,
         a.current_level,

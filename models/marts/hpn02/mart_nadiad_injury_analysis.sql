@@ -11,7 +11,7 @@ athletes as (
         gender,
         age_group,
         sport_discipline,
-        academy_name,
+        scheme_name,
         current_level
     from {{ ref('stg_nadiad_registration') }}
 ),
@@ -20,14 +20,13 @@ final as (
     select
         -- 🔑 Keys
         i.submission_key,
-        i.injury_id,
         i.athlete_id,
 
         -- 👤 Athlete Context
         a.gender,
         a.age_group,
         a.sport_discipline,
-        a.academy_name,
+        a.scheme_name,
         a.current_level,
 
         -- 🩹 Injury Details

@@ -11,7 +11,7 @@ athletes as (
         gender,
         age_group,
         sport_discipline,
-        academy_name,
+        scheme_name,
         current_level,
         training_years
     from {{ ref('stg_nadiad_registration') }}
@@ -21,14 +21,13 @@ final as (
     select
         -- 🔑 Keys
         c.submission_key,
-        c.competition_id,
         c.athlete_id,
 
         -- 👤 Athlete Context
         a.gender,
         a.age_group,
         coalesce(a.sport_discipline, c.sport_discipline)    as sport_discipline,
-        a.academy_name,
+        a.scheme_name,
         a.current_level,
         a.training_years,
 
