@@ -86,7 +86,7 @@ deduplicated as (
     from (
         select *,
                row_number() over (
-                   partition by submission_key
+                   partition by athlete_id
                    order by submission_date desc
                ) as rn
         from renamed
