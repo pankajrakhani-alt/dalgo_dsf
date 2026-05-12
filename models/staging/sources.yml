@@ -79,6 +79,12 @@ sources:
         freshness:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
+      
+      - name: session_feedback
+        loaded_at_field: submission_date
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
 
 models:
   # ─────────────────────────────────────
