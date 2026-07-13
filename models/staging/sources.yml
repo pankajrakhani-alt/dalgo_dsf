@@ -86,6 +86,12 @@ sources:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
 
+      - name: hpl07_zoom_attendance_participants
+        loaded_at_field: session_date
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 14, period: day}
+
 models:
   # ─────────────────────────────────────
   # Pune (pup01)
