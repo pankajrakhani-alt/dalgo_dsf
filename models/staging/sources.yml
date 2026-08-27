@@ -92,6 +92,19 @@ sources:
           warn_after: {count: 7, period: day}
           error_after: {count: 14, period: day}
 
+      # ─────────────────────────────────────
+      # BVL Project (bvl / hpb11)
+      # ─────────────────────────────────────
+      - name: Team_Name_List
+        # no freshness check - this is a static team roster, not an
+        # event-timestamped submission (same pattern as SFT's Merged_* tables)
+
+      - name: Raw_Data_Population
+        loaded_at_field: date
+        freshness:
+          warn_after: {count: 2, period: hour}
+          error_after: {count: 6, period: hour}
+
 models:
   # ─────────────────────────────────────
   # Pune (pup01)
@@ -214,3 +227,76 @@ models:
         tests:
           - not_null
           - unique
+          
+  # ─────────────────────────────────────
+  # BVL Project (hpb11)
+  # ─────────────────────────────────────
+  - name: stg_hpb11_bvl_teams
+    columns:
+      - name: team_id
+        tests:
+          - not_null
+          - unique
+      - name: team_name
+        tests:
+          - not_null
+      - name: age_category
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['U-10', 'U-12', 'U-14', 'U-16', 'U-18']
+      - name: gender_category
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Boys', 'Girls']
+
+  - name: stg_hpb11_bvl_matches
+    columns:
+      - name: match_id
+        tests:
+          - not_null
+          - unique
+      - name: match_date
+        tests:
+          - not_null
+      - name: home_team_name
+        tests:
+          - not_null
+      - name: away_team_name
+        tests:
+          - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['Scheduled', 'Completed']
+
+  - name: mart_hpb11_bvl_matches
+    columns:
+      - name: match_id
+        tests:
+          - not_null
+          - unique
+      - name: home_team_id
+        tests:
+          - not_null
+      - name: away_team_id
+        tests:
+          - not_null
+
+  - name: mart_hpb11_bvl_standings
+    columns:
+      - name: team_id
+        tests:
+          - not_null
+      - name: league_points
+        tests:
+          - not_null
+
+  - name: mart_hpb11_bvl_team_summary
+    columns:
+      - name: team_id
+        tests:
+          - not_null
+          - unique
+  
