@@ -28,6 +28,8 @@ renamed as (
         participant_name,
         gender,
         case
+            when dob ~ '^\d{2}/\d{2}/\d{4}$'
+            then to_date(dob, 'DD/MM/YYYY')
             when dob ~ '^\d{2}-\d{2}-\d{4}$'
             then to_date(dob, 'DD-MM-YYYY')
             when dob ~ '^\d{4}-\d{2}-\d{2}$'

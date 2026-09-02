@@ -91,6 +91,12 @@ sources:
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 14, period: day}
+                
+      - name: session_schedule
+        loaded_at_field: session_date
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 14, period: day}
 
       # ─────────────────────────────────────
       # BVL Project (bvl / hpb11)

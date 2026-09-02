@@ -1,4 +1,4 @@
-{{ config(materialized='view', schema='staging') }}
+{{ config(materialized='table', schema='staging') }}
 
 with source as (
     select *
