@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 
 const API_BASE = "/webhook";
 
@@ -63,8 +63,8 @@ function IndividualReport({ data }) {
     { key: "avg_m", label: "Learning Transfer Intent" },
     { key: "avg_engagement", label: "Engagement with Session Content" },
   ];
-  const pct = (v) => v ? `${Math.round(parseFloat(v) * 100)}%` : "—";
-  const gpa = (v) => v ? parseFloat(v).toFixed(2) : "—";
+  const pct = (v) => v ? `${Math.round(parseFloat(v) * 100)}%` : "\u2014";
+  const gpa = (v) => v ? parseFloat(v).toFixed(2) : "\u2014";
 
   return (
     <div>
@@ -72,15 +72,15 @@ function IndividualReport({ data }) {
         <div>
           <div style={styles.heroName}>{data.participant_name}</div>
           <div style={styles.heroMeta}>
-            {data.organisation_name} &nbsp;·&nbsp; {data.sport_domain}<br />
-            {data.state_name} &nbsp;·&nbsp; {data.gender === "male" ? "Male" : "Female"} &nbsp;·&nbsp; {data.years_of_experience} yrs experience
+            {data.organisation_name} &nbsp;\u00b7&nbsp; {data.sport_domain}<br />
+            {data.state_name} &nbsp;\u00b7&nbsp; {data.gender === "male" ? "Male" : "Female"} &nbsp;\u00b7&nbsp; {data.years_of_experience} yrs experience
           </div>
         </div>
         <div style={styles.cgpaBadge}>
           <div style={styles.cgpaNum}>{gpa(data.cgpa)}</div>
           <div style={styles.cgpaLabel}>CGPA / 10</div>
           <div style={{ display: "inline-block", marginTop: 8, padding: "4px 14px", borderRadius: 20, fontSize: 12, fontWeight: 600, background: levelColor(data.cgpa_level) + "44", color: "white" }}>
-            {data.cgpa_level || "—"}
+            {data.cgpa_level || "\u2014"}
           </div>
         </div>
       </div>
@@ -90,13 +90,13 @@ function IndividualReport({ data }) {
           <div style={styles.sectionTitle}>Qualitative GPA</div>
           <div style={{ fontSize: 36, fontWeight: 700, color: levelColor(data.ql_level) }}>{gpa(data.ql_gpa)}<span style={{ fontSize: 14, color: "#aaa", fontWeight: 400 }}> / 10</span></div>
           <GpaBar value={data.ql_gpa} color={levelColor(data.ql_level)} />
-          <div style={{ fontSize: 12, color: "#888", marginTop: 6 }}>{data.ql_level || "No Data"} · 60% weight in CGPA</div>
+          <div style={{ fontSize: 12, color: "#888", marginTop: 6 }}>{data.ql_level || "No Data"} \u00b7 60% weight in CGPA</div>
         </div>
         <div style={styles.card}>
           <div style={styles.sectionTitle}>Quantitative GPA</div>
           <div style={{ fontSize: 36, fontWeight: 700, color: levelColor(data.engagement_category) }}>{gpa(data.qn_gpa)}<span style={{ fontSize: 14, color: "#aaa", fontWeight: 400 }}> / 10</span></div>
           <GpaBar value={data.qn_gpa} color={levelColor(data.engagement_category)} />
-          <div style={{ fontSize: 12, color: "#888", marginTop: 6 }}>{data.engagement_category || "—"} · 40% weight in CGPA</div>
+          <div style={{ fontSize: 12, color: "#888", marginTop: 6 }}>{data.engagement_category || "\u2014"} \u00b7 40% weight in CGPA</div>
         </div>
       </div>
 
@@ -127,7 +127,52 @@ function IndividualReport({ data }) {
           })}
         </div>
       ) : (
-        <div style={{ ...styles.card, marginTop: 16, textAlign: "center", color: "#aaa", padding: 32 }}>No qualitative data — feedback forms not submitted</div>
+        <div style={{ ...styles.card, marginTop: 16, textAlign: "center", color: "#aaa", padding: 32 }}>No qualitative data \u2014 feedback forms not submitted</div>
+      )}
+
+      {data.session_wise_attendance && data.session_wise_attendance.length > 0 && (
+        <div style={{ ...styles.card, marginTop: 16, overflowX: "auto" }}>
+          <div style={styles.sectionTitle}>Session-wise Attendance</div>
+          <div style={{ fontSize: 12, color: "#888", marginBottom: 16 }}>Minutes attended per session (hover for topic & faculty)</div>
+          <div style={{ display: "flex", gap: 6, minWidth: "max-content", paddingBottom: 8 }}>
+            {data.session_wise_attendance.map((s) => {
+              const p = s.attendance_percent;
+              const color = p === 0 ? "#B02A37" : p >= 85 ? "#021B33" : p >= 70 ? "#2E75B6" : "#C77700";
+              const label = s.session_title === "orientation" ? "Ori" : s.session_title.toUpperCase();
+              return (
+                <div
+                  key={s.session_date}
+                  title={`${s.topic} \u2014 ${s.faculty_name}\n${s.duration_minutes} min (${p}%)`}
+                  style={{ textAlign: "center", minWidth: 52 }}
+                >
+                  <div style={{
+                    height: 56,
+                    borderRadius: 6,
+                    background: color,
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    cursor: "default",
+                  }}>
+                    <div>{p === 0 ? "\u2014" : `${p}%`}</div>
+                    <div style={{ fontSize: 9, fontWeight: 400, opacity: 0.85 }}>{s.duration_minutes}m</div>
+                  </div>
+                  <div style={{ fontSize: 10, color: "#666", marginTop: 4, fontWeight: 600 }}>{label}</div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ display: "flex", gap: 16, marginTop: 14, fontSize: 11, color: "#888", flexWrap: "wrap" }}>
+            <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#021B33", borderRadius: 2, marginRight: 4 }}></span>\u226585%</span>
+            <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#2E75B6", borderRadius: 2, marginRight: 4 }}></span>\u226570%</span>
+            <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#C77700", borderRadius: 2, marginRight: 4 }}></span>&lt;70%</span>
+            <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#B02A37", borderRadius: 2, marginRight: 4 }}></span>Absent</span>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -136,7 +181,7 @@ function IndividualReport({ data }) {
 function CohortReport({ cohortData }) {
   if (!cohortData || cohortData.length === 0) return <div style={{ color: "#aaa", textAlign: "center", padding: 40 }}>Loading cohort data...</div>;
   const valid = cohortData.filter(p => p.cgpa);
-  const avgCgpa = valid.length ? (valid.reduce((a, b) => a + parseFloat(b.cgpa), 0) / valid.length).toFixed(2) : "—";
+  const avgCgpa = valid.length ? (valid.reduce((a, b) => a + parseFloat(b.cgpa), 0) / valid.length).toFixed(2) : "\u2014";
   const avgQn = (cohortData.reduce((a, b) => a + parseFloat(b.qn_gpa || 0), 0) / cohortData.length).toFixed(2);
   const levels = { "Very High": 0, "High": 0, "Moderate": 0, "Low": 0, "Very Low": 0, "No Data": 0 };
   cohortData.forEach(p => { levels[p.cgpa_level || "No Data"]++; });
@@ -199,7 +244,7 @@ function OrgReport({ cohortData }) {
     <div>
       {orgList.map(([org, members]) => {
         const withData = members.filter(p => p.cgpa);
-        const avg = withData.length ? (withData.reduce((a, p) => a + parseFloat(p.cgpa), 0) / withData.length).toFixed(2) : "—";
+        const avg = withData.length ? (withData.reduce((a, p) => a + parseFloat(p.cgpa), 0) / withData.length).toFixed(2) : "\u2014";
         return (
           <div key={org} style={{ ...styles.card, marginBottom: 16 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
@@ -216,7 +261,7 @@ function OrgReport({ cohortData }) {
               <div key={p.hplid} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderTop: "1px solid #F0F4F8" }}>
                 <div style={{ fontSize: 13, color: DSF_NAVY }}>{p.participant_name}</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: levelColor(p.cgpa_level) }}>{p.cgpa ? parseFloat(p.cgpa).toFixed(2) : "—"}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: levelColor(p.cgpa_level) }}>{p.cgpa ? parseFloat(p.cgpa).toFixed(2) : "\u2014"}</span>
                   {p.cgpa_level && <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 10, background: levelColor(p.cgpa_level) + "22", color: levelColor(p.cgpa_level), fontWeight: 600 }}>{p.cgpa_level}</span>}
                 </div>
               </div>
@@ -285,7 +330,7 @@ export default function App() {
       <div style={styles.root}>
         <div style={styles.header}>
           <div>
-            <div style={styles.logo}>DSF · HPLP7</div>
+            <div style={styles.logo}>DSF \u00b7 HPLP7</div>
             <div style={styles.subtitle}>High Performance Leadership Programme</div>
           </div>
         </div>
@@ -305,18 +350,18 @@ export default function App() {
               <input style={styles.input} type="date" value={dob} onChange={e => setDob(e.target.value)} onKeyDown={e => e.key === "Enter" && handleLogin()} />
               {error && <div style={styles.error}>{error}</div>}
               <button style={{ ...styles.btn, marginTop: 8, opacity: loading ? 0.7 : 1 }} onClick={handleLogin} disabled={loading}>
-                {loading ? "Loading..." : "View My Report →"}
+                {loading ? "Loading..." : "View My Report \u2192"}
               </button>
             </>
           ) : (
             <>
               <div style={styles.loginTitle}>Admin Access</div>
-              <div style={styles.loginSub}>Cohort and Organisation reports — restricted access.</div>
+              <div style={styles.loginSub}>Cohort and Organisation reports \u2014 restricted access.</div>
               <label style={styles.label}>Admin Password</label>
               <input style={styles.input} type="password" value={adminPass} onChange={e => setAdminPass(e.target.value)} onKeyDown={e => e.key === "Enter" && handleAdminLogin()} />
               {error && <div style={styles.error}>{error}</div>}
               <button style={{ ...styles.btn, marginTop: 8, opacity: loading ? 0.7 : 1 }} onClick={handleAdminLogin} disabled={loading}>
-                {loading ? "Loading..." : "Enter Admin View →"}
+                {loading ? "Loading..." : "Enter Admin View \u2192"}
               </button>
             </>
           )}
@@ -329,8 +374,8 @@ export default function App() {
     <div style={styles.root}>
       <div style={styles.header}>
         <div style={{ flex: 1 }}>
-          <div style={styles.logo}>DSF · HPLP7</div>
-          <div style={styles.subtitle}>High Performance Leadership Programme — {isAdmin ? "Admin View" : "Participant Report"}</div>
+          <div style={styles.logo}>DSF \u00b7 HPLP7</div>
+          <div style={styles.subtitle}>High Performance Leadership Programme \u2014 {isAdmin ? "Admin View" : "Participant Report"}</div>
         </div>
         <button style={styles.btnSm} onClick={signOut}>Sign Out</button>
       </div>
