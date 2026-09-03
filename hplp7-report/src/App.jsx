@@ -1,6 +1,6 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 
-const API_BASE = "/webhook";
+const API_BASE = "https://purplish-chaperone-woven.ngrok-free.dev/webhook";
 
 const DSF_NAVY = "#021B33";
 const DSF_BLUE = "#2E75B6";
@@ -33,7 +33,7 @@ const styles = {
   metricSub: { fontSize: 11, color: "#aaa", marginTop: 2 },
   bar: { height: 6, borderRadius: 3, background: "#E0E8F0", marginTop: 8, overflow: "hidden" },
   dimRow: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #F0F4F8" },
-  dimName: { fontSize: 13, color: DSF_NAVY },
+  dimName: { fontSize: 13, color: DSF_NAVY, fontWeight: 700 },
   tabBar: { display: "flex", gap: 4, marginBottom: 24, background: "white", borderRadius: 10, padding: 4, boxShadow: "0 2px 8px rgba(2,27,51,0.06)" },
   tab: (active) => ({ flex: 1, padding: "9px 0", textAlign: "center", borderRadius: 7, fontSize: 13, fontWeight: 600, cursor: "pointer", border: "none", background: active ? DSF_NAVY : "transparent", color: active ? "white" : "#666", transition: "all 0.2s" }),
   error: { color: "#B03020", fontSize: 13, marginTop: 8, padding: "8px 12px", background: "#FFF0EE", borderRadius: 6 },
@@ -57,11 +57,11 @@ function GpaBar({ value, color }) {
 
 function IndividualReport({ data }) {
   const dims = [
-    { key: "avg_j", label: "Depth of Learning Reflection" },
-    { key: "avg_k", label: "Evidence of Self-Reflection" },
-    { key: "avg_l", label: "Quality of Action Planning" },
-    { key: "avg_m", label: "Learning Transfer Intent" },
-    { key: "avg_engagement", label: "Engagement with Session Content" },
+    { key: "avg_j", summaryKey: "j_summary", label: "Depth of Learning Reflection" },
+    { key: "avg_k", summaryKey: "k_summary", label: "Evidence of Self-Reflection" },
+    { key: "avg_l", summaryKey: "l_summary", label: "Quality of Action Planning" },
+    { key: "avg_m", summaryKey: "m_summary", label: "Learning Transfer Intent" },
+    { key: "avg_engagement", summaryKey: "engagement_summary", label: "Engagement with Session Content" },
   ];
   const pct = (v) => v ? `${Math.round(parseFloat(v) * 100)}%` : "\u2014";
   const gpa = (v) => v ? parseFloat(v).toFixed(2) : "\u2014";
@@ -72,8 +72,8 @@ function IndividualReport({ data }) {
         <div>
           <div style={styles.heroName}>{data.participant_name}</div>
           <div style={styles.heroMeta}>
-            {data.organisation_name} &nbsp;\u00b7&nbsp; {data.sport_domain}<br />
-            {data.state_name} &nbsp;\u00b7&nbsp; {data.gender === "male" ? "Male" : "Female"} &nbsp;\u00b7&nbsp; {data.years_of_experience} yrs experience
+            {data.organisation_name} &nbsp;{'\u00b7'}&nbsp; {data.sport_domain}<br />
+            {data.state_name} &nbsp;{'\u00b7'}&nbsp; {data.gender === "male" ? "Male" : "Female"} &nbsp;{'\u00b7'}&nbsp; {data.years_of_experience} yrs experience
           </div>
         </div>
         <div style={styles.cgpaBadge}>
@@ -90,13 +90,13 @@ function IndividualReport({ data }) {
           <div style={styles.sectionTitle}>Qualitative GPA</div>
           <div style={{ fontSize: 36, fontWeight: 700, color: levelColor(data.ql_level) }}>{gpa(data.ql_gpa)}<span style={{ fontSize: 14, color: "#aaa", fontWeight: 400 }}> / 10</span></div>
           <GpaBar value={data.ql_gpa} color={levelColor(data.ql_level)} />
-          <div style={{ fontSize: 12, color: "#888", marginTop: 6 }}>{data.ql_level || "No Data"} \u00b7 60% weight in CGPA</div>
+          <div style={{ fontSize: 12, color: "#888", marginTop: 6 }}>{data.ql_level || "No Data"} {'\u00b7'} 60% weight in CGPA</div>
         </div>
         <div style={styles.card}>
           <div style={styles.sectionTitle}>Quantitative GPA</div>
           <div style={{ fontSize: 36, fontWeight: 700, color: levelColor(data.engagement_category) }}>{gpa(data.qn_gpa)}<span style={{ fontSize: 14, color: "#aaa", fontWeight: 400 }}> / 10</span></div>
           <GpaBar value={data.qn_gpa} color={levelColor(data.engagement_category)} />
-          <div style={{ fontSize: 12, color: "#888", marginTop: 6 }}>{data.engagement_category || "\u2014"} \u00b7 40% weight in CGPA</div>
+          <div style={{ fontSize: 12, color: "#888", marginTop: 6 }}>{data.engagement_category || "\u2014"} {'\u00b7'} 40% weight in CGPA</div>
         </div>
       </div>
 
@@ -115,19 +115,25 @@ function IndividualReport({ data }) {
           {dims.map((d) => {
             const val = parseFloat(data[d.key] || 0);
             const lvl = val >= 2.5 ? "Advanced" : val >= 1.8 ? "Developing" : "Surface Level";
+            const summary = data[d.summaryKey];
             return (
-              <div key={d.key} style={styles.dimRow}>
-                <span style={styles.dimName}>{d.label}</span>
-                <span>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: levelColor(lvl) }}>{val.toFixed(2)}</span>
-                  <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 10, fontWeight: 600, background: levelColor(lvl) + "22", color: levelColor(lvl), marginLeft: 8 }}>{lvl}</span>
-                </span>
+              <div key={d.key} style={{ padding: "12px 0", borderBottom: "1px solid #F0F4F8" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={styles.dimName}>{d.label}</span>
+                  <span>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: levelColor(lvl) }}>{val.toFixed(2)}</span>
+                    <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 10, fontWeight: 600, background: levelColor(lvl) + "22", color: levelColor(lvl), marginLeft: 8 }}>{lvl}</span>
+                  </span>
+                </div>
+                {summary && (
+                  <div style={{ fontSize: 12, color: "#666", marginTop: 6, lineHeight: 1.6, textAlign: "left" }}>{summary}</div>
+                )}
               </div>
             );
           })}
         </div>
       ) : (
-        <div style={{ ...styles.card, marginTop: 16, textAlign: "center", color: "#aaa", padding: 32 }}>No qualitative data \u2014 feedback forms not submitted</div>
+        <div style={{ ...styles.card, marginTop: 16, textAlign: "center", color: "#aaa", padding: 32 }}>No qualitative data {'\u2014'} feedback forms not submitted</div>
       )}
 
       {data.session_wise_attendance && data.session_wise_attendance.length > 0 && (
@@ -167,8 +173,8 @@ function IndividualReport({ data }) {
             })}
           </div>
           <div style={{ display: "flex", gap: 16, marginTop: 14, fontSize: 11, color: "#888", flexWrap: "wrap" }}>
-            <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#021B33", borderRadius: 2, marginRight: 4 }}></span>\u226585%</span>
-            <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#2E75B6", borderRadius: 2, marginRight: 4 }}></span>\u226570%</span>
+            <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#021B33", borderRadius: 2, marginRight: 4 }}></span>{'\u2265'}85%</span>
+            <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#2E75B6", borderRadius: 2, marginRight: 4 }}></span>{'\u2265'}70%</span>
             <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#C77700", borderRadius: 2, marginRight: 4 }}></span>&lt;70%</span>
             <span><span style={{ display: "inline-block", width: 10, height: 10, background: "#B02A37", borderRadius: 2, marginRight: 4 }}></span>Absent</span>
           </div>
@@ -289,7 +295,9 @@ export default function App() {
     if (!hplid || !dob) { setError("Please enter both HPLID and Date of Birth."); return; }
     setLoading(true); setError("");
     try {
-      const res = await fetch(`${API_BASE}/hplp7-report?hplid=${hplid.trim().toUpperCase()}`);
+      const res = await fetch(`${API_BASE}/hplp7-report?hplid=${hplid.trim().toUpperCase()}`, {
+        headers: { 'ngrok-skip-browser-warning': 'true' }
+      });
       if (!res.ok) throw new Error("Participant not found. Please check your HPLID.");
       const json = await res.json();
       if (!json || !json.hplid) throw new Error("Participant not found. Please check your HPLID.");
@@ -308,7 +316,9 @@ export default function App() {
     if (adminPass !== "hplp07") { setError("Incorrect admin password."); return; }
     setLoading(true); setError("");
     try {
-      const res = await fetch(`${API_BASE}/hplp7-cohort`);
+      const res = await fetch(`${API_BASE}/hplp7-cohort`, {
+        headers: { 'ngrok-skip-browser-warning': 'true' }
+      });
       if (!res.ok) throw new Error("Could not load cohort data.");
       const json = await res.json();
       setCohortData(Array.isArray(json) ? json : [json]);
@@ -330,7 +340,7 @@ export default function App() {
       <div style={styles.root}>
         <div style={styles.header}>
           <div>
-            <div style={styles.logo}>DSF \u00b7 HPLP7</div>
+            <div style={styles.logo}>DSF {'\u00b7'} HPLP7</div>
             <div style={styles.subtitle}>High Performance Leadership Programme</div>
           </div>
         </div>
@@ -356,7 +366,7 @@ export default function App() {
           ) : (
             <>
               <div style={styles.loginTitle}>Admin Access</div>
-              <div style={styles.loginSub}>Cohort and Organisation reports \u2014 restricted access.</div>
+              <div style={styles.loginSub}>Cohort and Organisation reports {'\u2014'} restricted access.</div>
               <label style={styles.label}>Admin Password</label>
               <input style={styles.input} type="password" value={adminPass} onChange={e => setAdminPass(e.target.value)} onKeyDown={e => e.key === "Enter" && handleAdminLogin()} />
               {error && <div style={styles.error}>{error}</div>}
@@ -374,8 +384,8 @@ export default function App() {
     <div style={styles.root}>
       <div style={styles.header}>
         <div style={{ flex: 1 }}>
-          <div style={styles.logo}>DSF \u00b7 HPLP7</div>
-          <div style={styles.subtitle}>High Performance Leadership Programme \u2014 {isAdmin ? "Admin View" : "Participant Report"}</div>
+          <div style={styles.logo}>DSF {'\u00b7'} HPLP7</div>
+          <div style={styles.subtitle}>High Performance Leadership Programme {'\u2014'} {isAdmin ? "Admin View" : "Participant Report"}</div>
         </div>
         <button style={styles.btnSm} onClick={signOut}>Sign Out</button>
       </div>
