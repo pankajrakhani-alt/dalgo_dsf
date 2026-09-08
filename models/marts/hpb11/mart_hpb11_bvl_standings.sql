@@ -11,13 +11,12 @@ with matches as (
 
 ),
 
--- unpivot each match into one row per team (home perspective + away
--- perspective), so every team's full record can be aggregated together
 team_perspective as (
 
     select
         home_team_id  as team_id,
         home_team_name as team_name,
+        home_team_display as team_display,
         pool, round, age_category, gender_category,
         sets_won_home as sets_won,
         sets_won_away as sets_lost,
@@ -31,6 +30,7 @@ team_perspective as (
     select
         away_team_id  as team_id,
         away_team_name as team_name,
+        away_team_display as team_display,
         pool, round, age_category, gender_category,
         sets_won_away as sets_won,
         sets_won_home as sets_lost,
@@ -44,6 +44,7 @@ team_perspective as (
 select
     team_id,
     team_name,
+    team_display,
     pool,
     round,
     age_category,
@@ -61,5 +62,5 @@ select
     end as set_ratio
 
 from team_perspective
-group by team_id, team_name, pool, round, age_category, gender_category
+group by team_id, team_name, team_display, pool, round, age_category, gender_category
 order by pool, round, league_points desc, set_ratio desc nulls last
