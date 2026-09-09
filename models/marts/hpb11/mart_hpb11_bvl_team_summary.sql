@@ -75,7 +75,6 @@ aggregated as (
 select
     *,
     row_number() over (
-        partition by age_category, gender_category
         order by total_points desc, set_ratio desc nulls last, team_name asc
     ) as team_position
 
