@@ -6,8 +6,13 @@
 -- a team's record to one round/pool at a time (needed for the Pool-wise
 -- tabs on the dashboard). This model answers a different question:
 -- "what is this team's overall season record so far" - used for the
--- "Season Overview" tab only, clearly labeled to avoid confusion with
--- pool-scoped numbers.
+-- "Season Overview" tab / Team Standings, and Module 2's "Month at a
+-- Glance" headline numbers.
+--
+-- team_position: rank within the team's own Age Category + Gender
+-- Category (comparing U-12 Boys against U-16 Girls wouldn't make sense
+-- combined), ordered by total_points desc, then set_ratio desc as a
+-- tiebreaker.
 
 with matches as (
 
@@ -40,25 +45,38 @@ team_perspective as (
         case when winner_team_id = home_team_id then 1 else 0 end
     from matches
 
+),
+
+aggregated as (
+
+    select
+        team_id,
+        team_name,
+        team_display,
+        age_category,
+        gender_category,
+
+        count(*)               as matches_played,
+        sum(is_win)             as wins,
+        sum(is_loss)             as losses,
+        sum(league_pts)          as total_points,
+        sum(sets_won)             as sets_won,
+        sum(sets_lost)            as sets_lost,
+
+        case when sum(sets_lost) = 0 then null
+             else round(sum(sets_won)::numeric / sum(sets_lost), 2)
+        end as set_ratio
+
+    from team_perspective
+    group by team_id, team_name, team_display, age_category, gender_category
+
 )
 
 select
-    team_id,
-    team_name,
-    team_display,
-    age_category,
-    gender_category,
+    *,
+    rank() over (
+        partition by age_category, gender_category
+        order by total_points desc, set_ratio desc nulls last
+    ) as team_position
 
-    count(*)               as matches_played,
-    sum(is_win)             as wins,
-    sum(is_loss)             as losses,
-    sum(league_pts)          as total_points,
-    sum(sets_won)             as sets_won,
-    sum(sets_lost)            as sets_lost,
-
-    case when sum(sets_lost) = 0 then null
-         else round(sum(sets_won)::numeric / sum(sets_lost), 2)
-    end as set_ratio
-
-from team_perspective
-group by team_id, team_name, team_display, age_category, gender_category
+from aggregated
