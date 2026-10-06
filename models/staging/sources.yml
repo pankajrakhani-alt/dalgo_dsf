@@ -126,13 +126,6 @@ sources:
         # Generic table name comes from the sheet tab. The staging model
         # filters on formdef_id = 'hpb11_bvl_match_scoring'.
 
-      - name: Raw_Data_Population
-        # DEPRECATED (Oct 2026): no longer used as a data source. Kept
-        # declared only because the old stg_hpb11_bvl_matches model still
-        # references it. Freshness check removed on purpose. Delete this
-        # entry together with the old model once the dashboard and n8n
-        # are switched to the new Match Schedule + Scoring marts.
-
 models:
   # ─────────────────────────────────────
   # Pune (pup01)
@@ -283,7 +276,6 @@ models:
           - not_null
           - unique
 
-  # NEW (Oct 2026): Match Schedule + Scoring Submissions architecture
   - name: stg_hpb11_bvl_match_schedule
     columns:
       - name: match_id
@@ -306,40 +298,6 @@ models:
         tests:
           - not_null
           - unique
-
-  - name: mart_hpb11_bvl_matches_v2
-    columns:
-      - name: match_id
-        tests:
-          - not_null
-          - unique
-      - name: home_team_id
-        tests:
-          - not_null
-      - name: away_team_id
-        tests:
-          - not_null
-
-  # OLD (Raw_Data_Population based) - to be removed after 6e switch-over
-  - name: stg_hpb11_bvl_matches
-    columns:
-      - name: match_id
-        tests:
-          - not_null
-          - unique
-      - name: match_date
-        tests:
-          - not_null
-      - name: home_team_name
-        tests:
-          - not_null
-      - name: away_team_name
-        tests:
-          - not_null
-      - name: status
-        tests:
-          - accepted_values:
-              values: ['Scheduled', 'Completed']
 
   - name: mart_hpb11_bvl_matches
     columns:
@@ -364,22 +322,6 @@ models:
           - not_null
 
   - name: mart_hpb11_bvl_team_summary
-    columns:
-      - name: team_id
-        tests:
-          - not_null
-          - unique
-
-  - name: mart_hpb11_bvl_standings_v2
-    columns:
-      - name: team_id
-        tests:
-          - not_null
-      - name: league_points
-        tests:
-          - not_null
-
-  - name: mart_hpb11_bvl_team_summary_v2
     columns:
       - name: team_id
         tests:

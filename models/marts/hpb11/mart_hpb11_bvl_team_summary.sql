@@ -1,18 +1,7 @@
--- mart_hpb11_bvl_team_summary.sql
--- One row per team, aggregated ACROSS ALL ROUNDS PLAYED SO FAR this
--- season (League Stage + Super League + Final combined).
---
--- This is deliberately separate from mart_hpb11_bvl_standings, which scopes
--- a team's record to one round/pool at a time (needed for the Pool-wise
--- tabs on the dashboard). This model answers a different question:
--- "what is this team's overall season record so far" - used for the
--- "Season Overview" tab / Team Standings, and Module 2's "Month at a
--- Glance" headline numbers.
---
--- team_position: rank within the team's own Age Category + Gender
--- Category (comparing U-12 Boys against U-16 Girls wouldn't make sense
--- combined), ordered by total_points desc, then set_ratio desc as a
--- tiebreaker.
+-- mart_hpb11_bvl_team_summary_v2.sql
+-- One row per team, aggregated across all rounds played so far, built on
+-- mart_hpb11_bvl_matches_v2. Same columns as the old team_summary mart.
+-- team_position: ordered by total_points desc, then set_ratio desc.
 
 with matches as (
 
@@ -56,12 +45,12 @@ aggregated as (
         age_category,
         gender_category,
 
-        count(*)               as matches_played,
-        sum(is_win)             as wins,
-        sum(is_loss)             as losses,
-        sum(league_pts)          as total_points,
-        sum(sets_won)             as sets_won,
-        sum(sets_lost)            as sets_lost,
+        count(*)          as matches_played,
+        sum(is_win)       as wins,
+        sum(is_loss)      as losses,
+        sum(league_pts)   as total_points,
+        sum(sets_won)     as sets_won,
+        sum(sets_lost)    as sets_lost,
 
         case when sum(sets_lost) = 0 then null
              else round(sum(sets_won)::numeric / sum(sets_lost), 2)
@@ -75,7 +64,8 @@ aggregated as (
 select
     *,
     row_number() over (
-        order by total_points desc, set_ratio desc nulls last, team_name asc
+        partition by age_category, gender_category
+        order by total_points desc, case when sets_lost = 0 then 1000000 else set_ratio end desc, team_name asc
     ) as team_position
 
 from aggregated
