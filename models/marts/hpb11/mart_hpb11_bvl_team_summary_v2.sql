@@ -65,7 +65,7 @@ select
     *,
     row_number() over (
         partition by age_category, gender_category
-        order by total_points desc, set_ratio desc nulls last, team_name asc
+        order by total_points desc, case when sets_lost = 0 then 1000000 else set_ratio end desc, team_name asc
     ) as team_position
 
 from aggregated
