@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 
 const API_BASE = "https://purplish-chaperone-woven.ngrok-free.dev/webhook";
 
@@ -14,7 +14,7 @@ const styles = {
   loginTitle: { fontSize: 22, fontWeight: 700, color: DSF_NAVY, marginBottom: 6 },
   loginSub: { fontSize: 13, color: "#666", marginBottom: 28 },
   label: { display: "block", fontSize: 12, fontWeight: 600, color: DSF_NAVY, marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 },
-  input: { width: "100%", padding: "10px 14px", borderRadius: 8, border: "1.5px solid #D0DCE8", fontSize: 14, color: DSF_NAVY, outline: "none", boxSizing: "border-box", marginBottom: 18 },
+  input: { width: "100%", padding: "10px 14px", borderRadius: 8, border: "1.5px solid #D0DCE8", fontSize: 14, color: DSF_NAVY, backgroundColor: "#FFFFFF", colorScheme: "light", outline: "none", boxSizing: "border-box", marginBottom: 18 },
   btn: { width: "100%", padding: "12px", background: DSF_BLUE, color: "white", border: "none", borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: "pointer" },
   btnSm: { padding: "7px 16px", background: "rgba(255,255,255,0.15)", color: "white", border: "none", borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: "pointer" },
   reportWrap: { maxWidth: 960, margin: "0 auto", padding: "32px 24px" },

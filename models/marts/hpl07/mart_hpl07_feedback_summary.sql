@@ -14,7 +14,7 @@ feedback_counts as (
 ),
 
 sessions_completed as (
-    select 14 as total_sessions_completed
+    select 18 as total_sessions_completed
 ),
 
 final as (

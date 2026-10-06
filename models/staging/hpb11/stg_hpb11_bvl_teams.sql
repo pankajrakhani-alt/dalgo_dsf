@@ -6,6 +6,14 @@
 -- CATEGORY together, NOT team name alone. Clubs commonly field multiple
 -- squads under the same name. Never dedupe or join on team_name alone
 -- anywhere downstream.
+--
+-- UPDATE (6 Oct 2026): added squad_display_name, the sheet's own
+-- "Display Name" column, format "Team Name (Age Category Gender Category)".
+-- Match Schedule team_a / team_b and Scoring Submissions team_a_name /
+-- team_b_name store this same text, so it is the join key for the new
+-- Match Schedule + Scoring Submissions architecture. The older
+-- display_name column (which includes district) is kept unchanged so
+-- existing downstream models are not affected.
 
 with source as (
 
@@ -18,7 +26,8 @@ with source as (
         trim(district)             as district,
         trim(team_zone)            as team_zone,
         trim(age_category)         as age_category,
-        trim(gender_category)      as gender_category
+        trim(gender_category)      as gender_category,
+        trim(display_name)         as squad_display_name
     from {{ source('staging', 'Team_Name_List') }}
     where team_name is not null
       and district is not null
@@ -56,6 +65,14 @@ select
     team_zone,
     age_category,
     gender_category,
+
+    -- Squad ID used to join against Match Schedule and Scoring
+    -- Submissions. Falls back to the same format if the sheet cell is
+    -- ever blank.
+    coalesce(
+        nullif(squad_display_name, ''),
+        team_name || ' (' || age_category || ' ' || gender_category || ')'
+    ) as squad_display_name,
 
     -- human-readable label for lookups/QA, e.g. "Kardaiguri (U-12 Boys, Sonitpur)"
     team_name || ' (' || age_category || ' ' || gender_category || ', ' || district || ')'

@@ -79,7 +79,7 @@ sources:
         freshness:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
-      
+
       - name: session_feedback
         loaded_at_field: submission_date
         freshness:
@@ -91,7 +91,7 @@ sources:
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 14, period: day}
-                
+
       - name: session_schedule
         loaded_at_field: session_date
         freshness:
@@ -104,6 +104,12 @@ sources:
           warn_after: {count: 7, period: day}
           error_after: {count: 14, period: day}
 
+      - name: hplids
+        loaded_at_field: hplid
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 14, period: day}
+
       # ─────────────────────────────────────
       # BVL Project (bvl / hpb11)
       # ─────────────────────────────────────
@@ -111,11 +117,21 @@ sources:
         # no freshness check - this is a static team roster, not an
         # event-timestamped submission (same pattern as SFT's Merged_* tables)
 
+      - name: Match_Schedule
+        # no freshness check - fixtures are entered in advance, not
+        # event-timestamped
+
+      - name: data
+        # BVL Scoring Submissions (SurveyCTO publish to Google Sheet).
+        # Generic table name comes from the sheet tab. The staging model
+        # filters on formdef_id = 'hpb11_bvl_match_scoring'.
+
       - name: Raw_Data_Population
-        loaded_at_field: date
-        freshness:
-          warn_after: {count: 2, period: hour}
-          error_after: {count: 6, period: hour}
+        # DEPRECATED (Oct 2026): no longer used as a data source. Kept
+        # declared only because the old stg_hpb11_bvl_matches model still
+        # references it. Freshness check removed on purpose. Delete this
+        # entry together with the old model once the dashboard and n8n
+        # are switched to the new Match Schedule + Scoring marts.
 
 models:
   # ─────────────────────────────────────
@@ -225,7 +241,7 @@ models:
     columns:
       - name: h2h_id
         tests:
-          - not_null  
+          - not_null
 
   # ─────────────────────────────────────
   # Leadership Project (hpl07)
@@ -239,7 +255,7 @@ models:
         tests:
           - not_null
           - unique
-          
+
   # ─────────────────────────────────────
   # BVL Project (hpb11)
   # ─────────────────────────────────────
@@ -262,7 +278,36 @@ models:
           - not_null
           - accepted_values:
               values: ['Boys', 'Girls']
+      - name: squad_display_name
+        tests:
+          - not_null
+          - unique
 
+  # NEW (Oct 2026): Match Schedule + Scoring Submissions architecture
+  - name: stg_hpb11_bvl_match_schedule
+    columns:
+      - name: match_id
+        tests:
+          - not_null
+          - unique
+      - name: match_date
+        tests:
+          - not_null
+      - name: team_a_squad
+        tests:
+          - not_null
+      - name: team_b_squad
+        tests:
+          - not_null
+
+  - name: stg_hpb11_bvl_scoring_submissions
+    columns:
+      - name: match_id
+        tests:
+          - not_null
+          - unique
+
+  # OLD (Raw_Data_Population based) - to be removed after 6e switch-over
   - name: stg_hpb11_bvl_matches
     columns:
       - name: match_id
@@ -311,4 +356,3 @@ models:
         tests:
           - not_null
           - unique
-  

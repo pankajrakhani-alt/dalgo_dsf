@@ -15,6 +15,9 @@ with sessions as (
     union select 's12', '14 Aug', 'Innovation'
     union select 's13', '22 Aug', 'Operational and Performance Planning'
     union select 's14', '29 Aug', 'Leading Self'
+    union select 's15', '05 Sep', 'Leading Orgs'
+    union select 's16', '12 Sep', 'Leading Teams'
+    union select 's17', '19 Sep', 'Delivering HP'
 ),
 
 final as (

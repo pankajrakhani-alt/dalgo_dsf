@@ -88,6 +88,9 @@ select
     away_team_name,
     away_team_display,
 
+    s1_home, s1_away, s2_home, s2_away, s3_home, s3_away,
+    s4_home, s4_away, s5_home, s5_away,
+
     sets_won_home,
     sets_won_away,
 
