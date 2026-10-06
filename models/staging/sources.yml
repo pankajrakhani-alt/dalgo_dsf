@@ -369,3 +369,19 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: mart_hpb11_bvl_standings_v2
+    columns:
+      - name: team_id
+        tests:
+          - not_null
+      - name: league_points
+        tests:
+          - not_null
+
+  - name: mart_hpb11_bvl_team_summary_v2
+    columns:
+      - name: team_id
+        tests:
+          - not_null
+          - unique
