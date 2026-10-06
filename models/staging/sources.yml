@@ -307,6 +307,19 @@ models:
           - not_null
           - unique
 
+  - name: mart_hpb11_bvl_matches_v2
+    columns:
+      - name: match_id
+        tests:
+          - not_null
+          - unique
+      - name: home_team_id
+        tests:
+          - not_null
+      - name: away_team_id
+        tests:
+          - not_null
+
   # OLD (Raw_Data_Population based) - to be removed after 6e switch-over
   - name: stg_hpb11_bvl_matches
     columns:
