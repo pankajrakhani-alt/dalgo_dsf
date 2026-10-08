@@ -7,7 +7,7 @@ with source as (
 renamed as (
     select
         hplid::text                     as hplid,
-        participant_name::text          as participant_name,
+        initcap(trim(participant_name::text)) as participant_name,
         session::text                   as session_title,
         session_date::text              as session_date,
         j_score::integer                as j_score,

@@ -25,7 +25,7 @@ renamed as (
         participant_number                              as hplid,
 
         -- BASIC INFO
-        participant_name,
+        initcap(trim(participant_name))                 as participant_name,
         gender,
         case
             when dob ~ '^\d{2}/\d{2}/\d{4}$'
