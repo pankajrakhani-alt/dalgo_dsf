@@ -52,14 +52,11 @@ select
     coach_name,
     team_parent_name,
 
-    -- Real Team Parent email, when the sheet has it filled in. Falls
-    -- back to a placeholder test address if blank, so testing/demo
-    -- emails keep working while real addresses are still being
-    -- collected from DSF BVL Team - remove this fallback once every
-    -- team has a real email in the sheet.
-    coalesce(nullif(team_parent_email, ''), 'pankaj.rakhani@danisports.org')
+    -- Real Team Parent email from the sheet. NULL when blank: teams
+    -- without a Team Parent are skipped by the digest and reminder
+    -- emails until an email is added in the sheet.
+    nullif(team_parent_email, '')
         as team_parent_email,
-
     village_name,
     district,
     team_zone,

@@ -33,7 +33,8 @@ with source as (
         trim(venue)             as venue,
         trim(label)             as label,
         trim(streaming_link)    as streaming_link,
-        trim(team_check)        as team_check
+        trim(team_check)        as team_check,
+        trim(match_time)        as match_time
     from {{ source('staging', 'Match_Schedule') }}
     where match_id is not null
       and trim(match_id) <> ''
@@ -61,6 +62,7 @@ select
     nullif(venue, '')                       as venue,
     nullif(label, '')                       as label,
     nullif(streaming_link, '')              as streaming_link,
-    nullif(team_check, '')                  as team_check
+    nullif(team_check, '')                  as team_check,
+    nullif(match_time, '')                  as match_time
 
 from source

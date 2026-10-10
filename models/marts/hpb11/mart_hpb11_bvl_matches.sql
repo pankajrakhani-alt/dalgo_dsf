@@ -52,6 +52,7 @@ joined as (
     select
         s.match_id,
         s.match_date,
+        s.match_time,
         s.status                as schedule_status,
         s.district,
         s.zone,
@@ -126,6 +127,7 @@ with_sets as (
 select
     match_id,
     match_date,
+    match_time,
     entered_by                  as data_collator,
     entered_by,
     submitted_at,
